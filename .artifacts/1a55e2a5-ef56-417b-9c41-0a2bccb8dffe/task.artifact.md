@@ -1,0 +1,12 @@
+- [x] Update Theme to "Liceo Maroon"
+    - [x] Define colors in `Color.kt`
+    - [x] Update `Theme.kt` to `ProfileCardLabTheme`
+- [x] Implement Profile Screen
+    - [x] Create package `com.liceo.prelim.profilecard`
+    - [x] Implement `ProfileScreen` in `ProfileScreen.kt`
+    - [x] Implement `InfoRow` component
+    - [x] Add Previews (Light/Dark)
+- [x] Integrate with `MainActivity.kt`
+- [x] Verification
+    - [x] Run Gradle Build
+    - [x] Render Previews
