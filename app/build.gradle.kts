@@ -46,6 +46,9 @@ dependencies {
     // Lets you use collectAsStateWithLifecycle()
     implementation("androidx.lifecycle:lifecycle-runtime-compose:$lifecycleVersion")
 
+    // Navigation for Compose (Lecture 8)
+    implementation("androidx.navigation:navigation-compose:2.9.8")
+
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.material3)
