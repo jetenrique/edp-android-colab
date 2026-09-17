@@ -1,6 +1,8 @@
-- `[x]` Update `libs.versions.toml` with navigation and serialization dependencies
-- `[x]` Update `app/build.gradle.kts` with plugins and dependencies
-- `[x]` Create `Routes.kt` with type-safe route definitions
-- `[x]` Create `Screens.kt` with `HomeScreen` and `GreetingScreen`
-- `[x]` Update `MainActivity.kt` with `NavHost` implementation
-- `[x]` Verify build and run app
+- `[x]` Setup: Update `build.gradle.kts` and `AndroidManifest.xml`
+- `[x]` Permissions: Implement `PermissionHelper.kt` and `PermissionGate.kt`
+- `[x]` Hardware: Implement `Accelerometer.kt` and `LevelCard.kt`
+- `[x]` Hardware: Implement `CameraPreview.kt`, `Photo.kt`, and `CameraCard.kt`
+- `[x]` Hardware: Implement `Location.kt` and `LocationCard.kt`
+- `[x]` Hardware: Implement `Bonus.kt` (Shake to capture, Torch)
+- `[x]` Finalize: Update `MainActivity.kt`
+- `[x]` Verification: Gradle build and Preview check

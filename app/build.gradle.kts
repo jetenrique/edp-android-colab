@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.myapplication"
+    namespace = "edu.liceo.fieldkit"
     compileSdk {
         version = release(37) {
             minorApiLevel = 1
@@ -13,7 +13,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.myapplication"
+        applicationId = "edu.liceo.fieldkit"
         minSdk = 32
         targetSdk = 37
         versionCode = 1
@@ -49,6 +49,15 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.kotlinx.serialization.json)
+    
+    // GIVEN (read it, do not change it): Lab 12 libraries
+    val cx = "1.6.1"                                    // CameraX, latest stable
+    implementation("androidx.camera:camera-camera2:$cx")
+    implementation("androidx.camera:camera-lifecycle:$cx")
+    implementation("androidx.camera:camera-compose:$cx")
+    implementation("com.google.android.gms:play-services-location:21.4.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.10.0")
+
     testImplementation(libs.junit)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)

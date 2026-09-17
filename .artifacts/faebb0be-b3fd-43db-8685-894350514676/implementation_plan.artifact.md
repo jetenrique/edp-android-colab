@@ -1,49 +1,83 @@
-# Implementation Plan - Laboratory Activity 7: Navigation Compose — Building a Type-Safe App
+# Implementation Plan - Lab Activity 12: LiceoFieldKit
 
-Build a two-screen Android app using Jetpack Compose and Navigation Compose, utilizing type-safe routes with Kotlin serialization.
+Develop LiceoFieldKit, a campus field-report app that utilizes Hardware APIs (Accelerometer, CameraX, Location) and manages runtime permissions.
 
 ## User Review Required
 
 > [!IMPORTANT]
-> I will be adding the Kotlin Serialization plugin and Navigation Compose dependencies. I will use the project's Kotlin version (`2.2.10`) for the serialization plugin as instructed (matching the Kotlin version).
+> - The project namespace will be updated to `edu.liceo.fieldkit` as per requirements.
+> - New dependencies for CameraX, Location Services, and Lifecycle will be added.
+> - The app will be implemented on the `lab-activity-11` branch as requested by the user, despite the document mentioning `lab-activity-12`.
 
 ## Proposed Changes
 
-### Build Configuration
+### Build Configuration & Manifest
 
-#### [MODIFY] [libs.versions.toml](file:///Users/enrique/StudioProjects/edp-android-colab/gradle/libs.versions.toml)
-- Add `kotlinxSerialization` version.
-- Add `navigationCompose` version.
-- Add `kotlinx-serialization-json` library.
-- Add `androidx-navigation-compose` library.
-- Add `kotlin-serialization` plugin.
+#### [MODIFY] [build.gradle.kts (App)](file:///Users/enrique/StudioProjects/edp-android-colab/app/build.gradle.kts)
+- Update `namespace` to `edu.liceo.fieldkit`.
+- Add GIVEN dependencies:
+  - `androidx.camera:camera-camera2:1.6.1`
+  - `androidx.camera:camera-lifecycle:1.6.1`
+  - `androidx.camera:camera-compose:1.6.1`
+  - `com.google.android.gms:play-services-location:21.4.0`
+  - `androidx.lifecycle:lifecycle-runtime-compose:2.10.0`
 
-#### [MODIFY] [build.gradle.kts (App Module)](file:///Users/enrique/StudioProjects/edp-android-colab/app/build.gradle.kts)
-- Apply `kotlin-serialization` plugin.
-- Add `androidx-navigation-compose` and `kotlinx-serialization-json` dependencies.
+#### [MODIFY] [AndroidManifest.xml](file:///Users/enrique/StudioProjects/edp-android-colab/app/src/main/AndroidManifest.xml)
+- Add permissions: `CAMERA`, `ACCESS_FINE_LOCATION`, `ACCESS_COARSE_LOCATION`, `VIBRATE`.
+- Add feature: `android.hardware.camera` (required=false).
 
-### Application Logic
+### Package: edu.liceo.fieldkit.permissions
 
-#### [NEW] [Routes.kt](file:///Users/enrique/StudioProjects/edp-android-colab/app/src/main/java/com/example/myapplication/Routes.kt)
-- Define `Home` object and `Greeting` data class with `@Serializable`.
+#### [NEW] [PermissionHelper.kt](file:///Users/enrique/StudioProjects/edp-android-colab/app/src/main/java/edu/liceo/fieldkit/permissions/PermissionHelper.kt)
+- Implement `PermStatus` enum and `PermissionState` class.
+- Implement `permStatus()` to check permission state (Granted, NeedsRationale, Denied, NotAsked).
+- Implement `rememberPermission()` using `rememberLauncherForActivityResult` and `LifecycleResumeEffect`.
 
-#### [NEW] [Screens.kt](file:///Users/enrique/StudioProjects/edp-android-colab/app/src/main/java/com/example/myapplication/Screens.kt)
-- Implement `HomeScreen` with `OutlinedTextField` and "Show Greeting" button.
-- Implement `GreetingScreen` to display the welcome message.
+### Package: edu.liceo.fieldkit.hardware
 
-#### [MODIFY] [MainActivity.kt](file:///Users/enrique/StudioProjects/edp-android-colab/app/src/main/java/com/example/myapplication/MainActivity.kt)
-- Set up `NavController` and `NavHost`.
-- Register `Home` and `Greeting` destinations.
-- Use `navController.navigate` and `backStackEntry.toRoute()` for type-safe navigation.
+#### [NEW] [Accelerometer.kt](file:///Users/enrique/StudioProjects/edp-android-colab/app/src/main/java/edu/liceo/fieldkit/hardware/Accelerometer.kt)
+- Implement `rememberAccelerometer()` to read sensor data safely with lifecycle awareness.
+
+#### [NEW] [CameraPreview.kt](file:///Users/enrique/StudioProjects/edp-android-colab/app/src/main/java/edu/liceo/fieldkit/hardware/CameraPreview.kt)
+- Implement `CameraPreview` using CameraX and `CameraXViewfinder`.
+
+#### [NEW] [Photo.kt](file:///Users/enrique/StudioProjects/edp-android-colab/app/src/main/java/edu/liceo/fieldkit/hardware/Photo.kt)
+- Implement `takePhoto()` to save images to the app's cache directory.
+
+#### [NEW] [Location.kt](file:///Users/enrique/StudioProjects/edp-android-colab/app/src/main/java/edu/liceo/fieldkit/hardware/Location.kt)
+- Implement `currentLocation()` using Fused Location Provider.
+
+#### [NEW] [Bonus.kt](file:///Users/enrique/StudioProjects/edp-android-colab/app/src/main/java/edu/liceo/fieldkit/hardware/Bonus.kt)
+- Implement `isShake()` and `buzz()` for extra credit features.
+
+### Package: edu.liceo.fieldkit.ui
+
+#### [NEW] [PermissionGate.kt](file:///Users/enrique/StudioProjects/edp-android-colab/app/src/main/java/edu/liceo/fieldkit/ui/PermissionGate.kt)
+- Implement a reusable wrapper to handle different permission states (Granted, NotAsked, Rationale, Denied).
+
+#### [NEW] [LevelCard.kt](file:///Users/enrique/StudioProjects/edp-android-colab/app/src/main/java/edu/liceo/fieldkit/ui/LevelCard.kt)
+- Implement the UI for the accelerometer-based level check.
+
+#### [NEW] [CameraCard.kt](file:///Users/enrique/StudioProjects/edp-android-colab/app/src/main/java/edu/liceo/fieldkit/ui/CameraCard.kt)
+- Implement the UI for CameraX preview and capture.
+- Include Bonus: Shake-to-capture and Torch toggle.
+
+#### [NEW] [LocationCard.kt](file:///Users/enrique/StudioProjects/edp-android-colab/app/src/main/java/edu/liceo/fieldkit/ui/LocationCard.kt)
+- Implement the UI for tagging current location with permission handling.
+
+### Main Entry Point
+
+#### [MODIFY] [MainActivity.kt](file:///Users/enrique/StudioProjects/edp-android-colab/app/src/main/java/edu/liceo/fieldkit/MainActivity.kt)
+- Replace with the GIVEN `MainActivity` structure.
 
 ## Verification Plan
 
 ### Automated Tests
-- Run `./gradlew assembleDebug` to ensure successful compilation and dependency resolution.
+- Run Gradle sync and build to ensure all dependencies are correct.
 
 ### Manual Verification
-1. Launch the app.
-2. Enter a name in the `HomeScreen`.
-3. Tap "Show Greeting".
-4. Verify the `GreetingScreen` displays "Hello, [Name]! Welcome to Jetpack Navigation.".
-5. Press the Back button and verify return to `HomeScreen`.
+1. Verify Accelerometer: Numbers change and "LEVEL ✓" appears when the device is flat.
+2. Verify Camera Permissions: Test all states (Not asked, Rationale, Blocked, Granted).
+3. Verify Photo Capture: Save a photo and check the thumbnail.
+4. Verify Location: Tag location and check coordinates.
+5. Verify Bonus: Shake the device to take a photo; toggle the torch.

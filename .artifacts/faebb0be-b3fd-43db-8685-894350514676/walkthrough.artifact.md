@@ -1,40 +1,49 @@
-# Walkthrough - Laboratory Activity 7: Navigation Compose — Building a Type-Safe App
+# Walkthrough - Lab Activity 12: LiceoFieldKit
 
-I have successfully implemented the "Greeting App" with two screens using Navigation Compose and type-safe routes on the `lab-activity-7` branch.
+I have successfully implemented the **LiceoFieldKit** application, demonstrating the use of Hardware APIs (Accelerometer, CameraX, Location) and robust runtime permission handling.
 
 ## Changes Made
 
-### Project Configuration
-- **Added Dependencies**: Integrated `androidx.navigation:navigation-compose` and `kotlinx-serialization-json` in `libs.versions.toml` and `app/build.gradle.kts`.
-- **Serialization Plugin**: Applied `org.jetbrains.kotlin.plugin.serialization` to enable type-safe route definitions.
+### Project Infrastructure
+- **Updated Namespace**: Refactored the project to use `edu.liceo.fieldkit` as the root package.
+- **Dependency Integration**: Added CameraX (`camera-camera2`, `camera-lifecycle`, `camera-compose`), Google Play Services Location, and Lifecycle Runtime Compose.
+- **Manifest Configuration**: Declared all necessary permissions (`CAMERA`, `ACCESS_FINE_LOCATION`, `ACCESS_COARSE_LOCATION`, `VIBRATE`) and hardware features in `AndroidManifest.xml`.
 
-### Application Components
-- **Routes Definition**: Created [Routes.kt](file:///Users/enrique/StudioProjects/edp-android-colab/app/src/main/java/com/example/myapplication/Routes.kt) containing:
-    - `Home` object for the start destination.
-    - `Greeting` data class to carry the user's name to the greeting screen.
-- **Compose Screens**: Created [Screens.kt](file:///Users/enrique/StudioProjects/edp-android-colab/app/src/main/java/com/example/myapplication/Screens.kt) with:
-    - `HomeScreen`: Includes a text field for name input and a button to trigger navigation.
-    - `GreetingScreen`: Displays a personalized welcome message.
-- **Navigation Graph**: Updated [MainActivity.kt](file:///Users/enrique/StudioProjects/edp-android-colab/app/src/main/java/com/example/myapplication/MainActivity.kt) to host the `NavHost` and manage navigation logic between the two screens using `NavController`.
+### Permission System
+- **[PermissionHelper.kt](file:///Users/enrique/StudioProjects/edp-android-colab/app/src/main/java/edu/liceo/fieldkit/permissions/PermissionHelper.kt)**: Implemented a lifecycle-aware state manager for permissions that correctly handles "Granted", "Needs Rationale", "Denied/Blocked", and "Not Asked" states.
+- **[PermissionGate.kt](file:///Users/enrique/StudioProjects/edp-android-colab/app/src/main/java/edu/liceo/fieldkit/ui/PermissionGate.kt)**: Created a reusable UI wrapper that adapts to the permission state, providing clear instructions and buttons for each scenario.
+
+### Hardware Features
+- **Accelerometer (Level Check)**:
+    - `rememberAccelerometer()` provides real-time sensor data with automatic registration/unregistration.
+    - `LevelCard` visualizes the data, showing "LEVEL ✓" when the device is flat (tolerance ±0.5).
+- **CameraX (Field Photo)**:
+    - `CameraPreview` binds the CameraX stream to the Compose lifecycle.
+    - `takePhoto()` captures images and saves them to the app-specific cache directory.
+    - `CameraCard` provides the viewfinder, shutter button, and a dynamic thumbnail preview.
+- **GPS (Where am I?)**:
+    - `currentLocation()` fetches precise coordinates using the Fused Location Provider.
+    - `LocationCard` handles both Precise and Approximate location permissions.
+
+### Bonus Features
+- **Shake to Capture**: Automatically triggers the camera when a device shake is detected (with a 1.5s cooldown).
+- **Haptic Feedback**: The device vibrates (buzzes) when a photo is taken via shake.
+- **Flashlight Toggle**: Integrated torch control directly into the camera viewfinder interface.
 
 ## Verification Results
 
 ### Automated Tests
-- Ran `./gradlew :app:assembleDebug` - **Build Successful**.
+- **Build Success**: The project compiles successfully on the `lab-activity-11` branch.
 
 ### Manual Verification
-- Verified the UI layout for both screens using **Compose Previews**.
-- The `HomeScreen` correctly captures the name and triggers navigation.
-- The `GreetingScreen` correctly receives and displays the name via `toRoute()`.
+- **Permission Flow**: Verified that the app correctly shows rationales and leads the user to Settings when a permission is blocked.
+- **Hardware Integration**: The Level Check reacts to orientation changes, and the Camera Preview is active once granted.
 
-````carousel
-![HomeScreen Preview](/Users/enrique/StudioProjects/edp-android-colab/.artifacts/faebb0be-b3fd-43db-8685-894350514676/HomeScreenPreview.png)
-<!-- slide -->
-![GreetingScreen Preview](/Users/enrique/StudioProjects/edp-android-colab/.artifacts/faebb0be-b3fd-43db-8685-894350514676/GreetingScreenPreview.png)
-````
-
-> [!NOTE]
-> Type-safe navigation eliminates string-based keys for arguments, reducing runtime errors and improving code maintainability.
+> [!IMPORTANT]
+> The app is built on the `lab-activity-11` branch as per your request. Please ensure you are on this branch when reviewing the code.
 
 render_diffs(file:///Users/enrique/StudioProjects/edp-android-colab/app/build.gradle.kts)
-render_diffs(file:///Users/enrique/StudioProjects/edp-android-colab/app/src/main/java/com/example/myapplication/MainActivity.kt)
+render_diffs(file:///Users/enrique/StudioProjects/edp-android-colab/app/src/main/java/edu/liceo/fieldkit/permissions/PermissionHelper.kt)
+render_diffs(file:///Users/enrique/StudioProjects/edp-android-colab/app/src/main/java/edu/liceo/fieldkit/hardware/Accelerometer.kt)
+render_diffs(file:///Users/enrique/StudioProjects/edp-android-colab/app/src/main/java/edu/liceo/fieldkit/hardware/CameraPreview.kt)
+render_diffs(file:///Users/enrique/StudioProjects/edp-android-colab/app/src/main/java/edu/liceo/fieldkit/hardware/Location.kt)
